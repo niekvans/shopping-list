@@ -9,7 +9,6 @@ import { firebase } from './firebase/firebase';
 import AppRouter, { history } from './routers/AppRouter';
 import configureStore from './store/configureStore';
 import { login, logout } from './actions/auth';
-import LoadingPage from './components/LoadingPage';
 
 const store = configureStore();
 const jsx = (
@@ -26,7 +25,7 @@ const renderApp = () => {
     }
 };
 
-ReactDOM.render(<LoadingPage />, document.getElementById('app'));
+ReactDOM.render(jsx, document.getElementById('app'));
 
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
