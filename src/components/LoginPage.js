@@ -24,7 +24,11 @@ export default class LoginPage extends React.Component {
 
     startLogin = (event) => {
         event.preventDefault();
-        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        return firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then((result) => {
+                console.log(result);
+                this.setState({ error: '' });
+            })
             .catch((error) => {
                 this.setState({ error: error.message, password: '' });
             });
