@@ -4,11 +4,18 @@
     font-size: $font-size-large;
     font-weight: 300;
     padding: $s-size;
+    margin-right: $s-size;
+    width: 100%;
+}
+
+.title {
+    @extend .text-input;
+    padding-bottom: $m-size;
+    margin-bottom: $m-size;
 }
 
 .select {
     @extend .text-input;
-
 }
 
 .textarea {

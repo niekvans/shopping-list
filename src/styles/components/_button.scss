@@ -18,3 +18,14 @@
     background: none;
 }
 
+.button-image {
+    background: none;
+    border: none;
+    display: inline-block;
+    size: $m-size;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+

@@ -36,8 +36,42 @@ export const startEditList = ({ id, title, items }) => {
     return (dispatch) => {
         return database.ref(`/lists/${id}`).update({ title, items })
             .then(() => {
-                console.log(id);
                 dispatch(editList({ id, title, items }));
             });
     }
-}
+};
+
+export const setLists = (lists) => ({
+    type: 'SET_LISTS',
+    lists
+});
+
+export const startSetLists = () => {
+    return (dispatch) => {
+        return database.ref('lists').once('value')
+            .then((snapshot) => {
+                const lists = [];
+                snapshot.forEach((childSnapshot) => {
+                    lists.push({
+                        id: childSnapshot.key,
+                        ...childSnapshot.val()
+                    });
+                });
+                dispatch(setLists(lists));
+            });
+    };
+};
+
+export const removeList = (id) => ({
+    type: 'REMOVE_LIST',
+    id
+});
+
+export const startRemoveList = (id) => {
+    return (dispatch) => {
+        return database.ref(`lists/${id}`).remove()
+            .then(() => {
+                dispatch(removeList(id));
+            })
+    };
+};

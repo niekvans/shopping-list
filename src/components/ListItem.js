@@ -34,15 +34,16 @@ export default class ListItem extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="list-item">
                 {this.state.error ? <p>{this.state.error}</p> : undefined}
                 <input
                     type="String"
                     value={this.state.text}
                     onChange={this.changeText}
                     onBlur={this.saveItem}
+                    className="text-input"
                 />
-                <button onClick={this.removeItem}>Remove</button>
+                <input onClick={this.removeItem} className="button-image" type="image" src="/images/delete_button.png" />
             </div>
         )
     }

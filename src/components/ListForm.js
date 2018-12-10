@@ -6,8 +6,8 @@ export default class ListForm extends React.Component {
         super(props);
 
         this.state = {
-            title: props.list ? props.list.title : '12341',
-            items: ['hello', 'okay', 'now'],
+            title: props.list && props.list.title ? props.list.title : '',
+            items: props.list && props.list.items ? props.list.items : [],
             currentItem: '',
             addingItemError: '',
             savingError: ''
@@ -68,28 +68,30 @@ export default class ListForm extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <form onSubmit={this.onSubmit}>
-                </form>
-                <input
-                    type="String"
-                    placeholder="Title"
-                    value={this.state.title}
-                    onChange={this.changeTitle}
-                />
-                {this.state.items.map((item) => <ListItem text={item} key={item} saveItem={this.saveItem} removeItem={this.removeItem} id={item} />)}
-                <form onSubmit={this.addItem}>
-                    {this.state.addingItemError ? <p>{this.state.addingItemError}</p> : undefined}
+        return (   
+                <form className="form">
                     <input
                         type="String"
-                        placeholder="Add item to the list"
-                        value={this.state.currentItem}
-                        onChange={this.changeCurrentItem}
+                        placeholder="Title"
+                        value={this.state.title}
+                        onChange={this.changeTitle}
+                        className="text-input title"
                     />
+                    {this.state.items.map((item) => <ListItem text={item} key={item} saveItem={this.saveItem} removeItem={this.removeItem} id={item} />)}
+                    <form onSubmit={this.addItem}>
+                        {this.state.addingItemError ? <p>{this.state.addingItemError}</p> : undefined}
+                        <input
+                            type="String"
+                            placeholder="Add item to the list"
+                            value={this.state.currentItem}
+                            onChange={this.changeCurrentItem}
+                            className="text-input"
+                        />
+                    </form>
+                    <div>
+                        <button className="button" onClick={this.saveList}>Save List</button>
+                    </div>
                 </form>
-                <button onClick={this.saveList}>Save</button>
-            </div>
         )
     };
 };

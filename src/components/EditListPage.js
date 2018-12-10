@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import ListForm from './ListForm';
 
 // Functions
-import { startEditList } from './../actions/list';
+import { startEditList, startRemoveList } from './../actions/list';
 
 export class EditListPage extends React.Component {
     constructor(props) {
@@ -33,19 +33,33 @@ export class EditListPage extends React.Component {
         }
     };
 
+    removeList = (event) => {
+        event.preventDefault();
+        this.props.startRemoveList(this.props.list.id);
+        this.props.history.push("/dashboard");
+    };
+
     render() {
         return (
             <div>
-                <h1>Editing: {this.props.list.title}</h1>
-                {this.state.error ? <p>{this.state.error}</p> : undefined}
-                <ListForm saveList={this.saveList} />
+                <div className="page-header">
+                    <div className="content-container">
+                        <h1 className="page-header__title">Editing: {this.props.list.title}</h1>
+                    </div>
+                </div>
+                <div className="content-container">
+                    {this.state.error ? <p className="form__error">{this.state.error}</p> : undefined}
+                    <ListForm saveList={this.saveList} list={this.props.list} />
+                    <button className="button button--secondary" onClick={this.removeList}>Remove List</button>
+                </div>
             </div>
         );
-    }
+    };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    startEditList: (id, title, items) => dispatch(startEditList(id, title, items))
+    startEditList: (id, title, items) => dispatch(startEditList(id, title, items)),
+    startRemoveList: (id) => dispatch(startRemoveList(id))
 });
 
 const mapStateToProps = (state, props) => {

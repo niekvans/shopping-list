@@ -10,19 +10,16 @@ export default (state = listReducerDefaultState, action) => {
                     title: action.title,
                     items: action.items
                 }
-            ]
-
-
+            ];
+        case 'SET_LISTS':
+            return action.lists
         case 'REMOVE_LIST':
-            return {
-                id: action.id
-            };
+            return state.filter((list) => {
+                return list.id !== action.id;
+            });
         case 'EDIT_LIST':
             return state.map((list) => {
-                console.log(list);
-                console.log(action);
                 if (list.id === action.id) {
-                    console.log('changing this list', action.title, action.items);
                     return {
                         id: action.id,
                         title: action.title,

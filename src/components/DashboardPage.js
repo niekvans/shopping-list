@@ -4,7 +4,11 @@ import ListOverview from './ListOverview';
 
 const DashboardPage = () => (
     <div>
-        <Link to="/create">Add new list</Link>
+        <div className="page-header">
+            <div className="content-container">                
+                <Link className="button" to="/create">Add new list</Link>
+            </div>
+        </div>
         <ListOverview />
     </div>
 );

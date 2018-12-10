@@ -17,7 +17,6 @@ export class AddListPage extends React.Component {
     };
 
     addList = (listData) => {
-        console.log(listData);
         if (listData.title == '') {
             this.setState({
                 error: 'Please enter a title for your list'
@@ -32,9 +31,15 @@ export class AddListPage extends React.Component {
     render() {
         return (
             <div>
-                <h1>Creating a new List</h1>
-                {this.state.error ? <p>{this.state.error}</p> : undefined}
-                <ListForm saveList={this.addList} />
+                <div className="page-header">
+                    <div className="content-container">
+                        <h1 className="page-header__title">Creating a new List</h1>
+                    </div>
+                </div>
+                <div className="content-container">
+                    {this.state.error ? <p className="form__error">{this.state.error}</p> : undefined}
+                    <ListForm saveList={this.addList} />
+                </div>
             </div>
         );
     }

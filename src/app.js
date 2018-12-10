@@ -10,6 +10,7 @@ import LoadingPage from './components/LoadingPage';
 import AppRouter, { history } from './routers/AppRouter';
 import configureStore from './store/configureStore';
 import { login, logout } from './actions/auth';
+import { startSetLists } from './actions/list';
 
 const store = configureStore();
 const jsx = (
@@ -31,7 +32,9 @@ ReactDOM.render(<LoadingPage />, document.getElementById('app'));
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
         store.dispatch(login(user.uid));
-        renderApp();
+        store.dispatch(startSetLists()).then(() => {
+            renderApp();
+        });
     }
     else {
         store.dispatch(logout());
