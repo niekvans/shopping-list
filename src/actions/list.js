@@ -9,9 +9,11 @@ export const addList = ({ id, title, items }) => {
     };
 };
 
+const databaseSection = process.env.DATABASE_SECTION;
+
 export const startAddList = (listData) => {
     return (dispatch) => {
-        return database.ref('/lists').push({ title: listData.title, items: listData.items })
+        return database.ref(`/${databaseSection}`).push({ title: listData.title, items: listData.items })
             .then((ref) => {
                 dispatch(addList({
                     id: ref.key,
@@ -34,7 +36,7 @@ export const editList = ({ id, title, items }) => ({
 
 export const startEditList = ({ id, title, items }) => {
     return (dispatch) => {
-        return database.ref(`/lists/${id}`).update({ title, items })
+        return database.ref(`/${databaseSection}/${id}`).update({ title, items })
             .then(() => {
                 dispatch(editList({ id, title, items }));
             });
@@ -48,7 +50,7 @@ export const setLists = (lists) => ({
 
 export const startSetLists = () => {
     return (dispatch) => {
-        return database.ref('lists').once('value')
+        return database.ref(`/${databaseSection}`).once('value')
             .then((snapshot) => {
                 const lists = [];
                 snapshot.forEach((childSnapshot) => {
@@ -69,7 +71,7 @@ export const removeList = (id) => ({
 
 export const startRemoveList = (id) => {
     return (dispatch) => {
-        return database.ref(`lists/${id}`).remove()
+        return database.ref(`/${databaseSection}/${id}`).remove()
             .then(() => {
                 dispatch(removeList(id));
             })
