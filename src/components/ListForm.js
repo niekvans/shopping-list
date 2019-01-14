@@ -68,8 +68,16 @@ export default class ListForm extends React.Component {
     }
 
     render() {
-        return (   
-                <form className="form">
+        return (
+            <div className="form">
+                <form
+                    onSubmit={() => event.preventDefault()}
+                >
+                    <input
+                        type="submit"
+                        onSubmit={() => event.preventDefault()}
+                        className="hidden"
+                    />
                     <input
                         type="String"
                         placeholder="Title"
@@ -78,20 +86,21 @@ export default class ListForm extends React.Component {
                         className="text-input title"
                     />
                     {this.state.items.map((item) => <ListItem text={item} key={item} saveItem={this.saveItem} removeItem={this.removeItem} id={item} />)}
-                    <form onSubmit={this.addItem}>
-                        {this.state.addingItemError ? <p>{this.state.addingItemError}</p> : undefined}
-                        <input
-                            type="String"
-                            placeholder="Add item to the list"
-                            value={this.state.currentItem}
-                            onChange={this.changeCurrentItem}
-                            className="text-input"
-                        />
-                    </form>
-                    <div>
-                        <button className="button" onClick={this.saveList}>Save List</button>
-                    </div>
                 </form>
+                <form onSubmit={this.addItem}>
+                    {this.state.addingItemError ? <p>{this.state.addingItemError}</p> : undefined}
+                    <input
+                        type="String"
+                        placeholder="Add item to the list"
+                        value={this.state.currentItem}
+                        onChange={this.changeCurrentItem}
+                        className="text-input"
+                    />
+                </form>
+                <div>
+                    <button className="button" onClick={this.saveList}>Save List</button>
+                </div>
+            </div>
         )
     };
 };

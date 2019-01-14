@@ -3,12 +3,5 @@ Shopping List application
 
 TODO:
 
-- Add reducers and link to Firebase for:
-    - Add
-    - Remove
-    - Edit
+- Make realtime, every update should be saved and shown in list
 
-
-
-Design:
- - Login page (also error!)

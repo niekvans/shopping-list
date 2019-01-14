@@ -21,7 +21,6 @@ export default class ListItem extends React.Component {
 
     saveItem = () => {
         if (this.state.text !== this.props.text) {
-
             const succeeded = this.props.saveItem(this.props.text, this.state.text);
             if (!succeeded) {
                 this.setState({
@@ -43,7 +42,7 @@ export default class ListItem extends React.Component {
                     onBlur={this.saveItem}
                     className="text-input"
                 />
-                <input onClick={this.removeItem} className="button-image" type="image" src="/images/delete_button.png" />
+                <input type="button" onClick={this.removeItem} className="button-image" type="image" src="/images/delete_button.png" />
             </div>
         )
     }
