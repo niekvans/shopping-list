@@ -1,32 +1,36 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 // Components
 import ListForm from './ListForm';
 
-// Functions
-import { startAddList } from './../actions/list';
+// Database ref
+import database from '../firebase/firebase';
 
 export class AddListPage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            error: ''
+            error: '',
+            id: ''
         }
     };
 
-    addList = (listData) => {
-        if (listData.title == '') {
-            this.setState({
-                error: 'Please enter a title for your list'
-            });
-        }
-        else {
-            this.props.startAddList(listData);
-            this.props.history.push("/dashboard");
-        }
+    componentWillMount() {
+        const newRef = database.ref(`/${process.env.DATABASE_SECTION}`).push({
+            items: [],
+            title: ''
+        });
+        this.setState({
+            id: newRef.key
+        });
+    }
+
+
+    saveListAndPush = () => {
+        this.props.history.push("/dashboard");
     };
+
 
     render() {
         return (
@@ -38,16 +42,11 @@ export class AddListPage extends React.Component {
                 </div>
                 <div className="content-container">
                     {this.state.error ? <p className="form__error">{this.state.error}</p> : undefined}
-                    <ListForm saveList={this.addList} />
+                    <ListForm saveListAndPush={this.saveListAndPush} listid={this.state.id} />
                 </div>
             </div>
         );
     }
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    startAddList: (title, items) => dispatch(startAddList(title, items))
-});
-
-
-export default connect(undefined, mapDispatchToProps)(AddListPage);
+export default AddListPage;

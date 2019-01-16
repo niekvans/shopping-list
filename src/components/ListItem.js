@@ -1,5 +1,10 @@
 import React from 'react';
 
+// Database ref
+import database from '../firebase/firebase';
+
+
+
 export default class ListItem extends React.Component {
     constructor(props) {
         super(props);
@@ -10,31 +15,38 @@ export default class ListItem extends React.Component {
         }
     };
 
+    componentWillMount() {
+        const ref = database.ref(`/${process.env.DATABASE_SECTION}/${this.props.listid}/items/${this.props.id}`);
+        ref.on('value', (snapshot) => {
+            this.setState({
+                text: snapshot.val()
+            })
+        });
+    };
+
+    componentWillUnmount() {
+        const ref = database.ref(`/${process.env.DATABASE_SECTION}/${this.props.listid}/items/${this.props.id}`);
+        ref.off();
+    }
+
     changeText = (event) => {
         const text = event.target.value;
         this.setState({ text });
     };
 
     removeItem = () => {
-        this.props.removeItem(this.props.id);
+        const ref = database.ref(`/${process.env.DATABASE_SECTION}/${this.props.listid}/items/${this.props.id}`);
+        ref.remove();
     };
 
     saveItem = () => {
-        if (this.state.text !== this.props.text) {
-            const succeeded = this.props.saveItem(this.props.text, this.state.text);
-            if (!succeeded) {
-                this.setState({
-                    text: this.props.text,
-                    error: 'Item already exists'
-                });
-            };
-        };
+        const ref = database.ref(`/${process.env.DATABASE_SECTION}/${this.props.listid}/items/${this.props.id}`);
+        ref.set(this.state.text);
     };
 
     render() {
         return (
-            <div className="list-item">
-                {this.state.error ? <p>{this.state.error}</p> : undefined}
+            <div className={this.state.error ? "list-item__error" : "list-item"}>
                 <input
                     type="String"
                     value={this.state.text}

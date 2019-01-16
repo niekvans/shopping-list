@@ -1,41 +1,79 @@
 import React from 'react';
 import ListItem from './ListItem';
 
+// Database ref
+import database from '../firebase/firebase';
+
 export default class ListForm extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            title: props.list && props.list.title ? props.list.title : '',
-            items: props.list && props.list.items ? props.list.items : [],
+            title: '',
+            items: [],
             currentItem: '',
             addingItemError: '',
             savingError: ''
         }
     };
 
+    componentWillMount() {
+        if (this.props.listid) {
+            database.ref(`/${process.env.DATABASE_SECTION}/${this.props.listid}`).on('value', (snapshot) => {
+                let items = {};
+                let newList = [];
+                if (snapshot.val()) {
+                    items = snapshot.val().items;
+                    for (let item in items) {
+                        newList.push({
+                            key: item,
+                            text: items[item]
+                        });
+                    }
+                    this.setState({
+                        items: newList,
+                        title: snapshot.val().title
+                    });
+                }
+            });
+        }
+    };
+
+    componentWillUnmount() {
+        if (this.props.listid) {
+            database.ref(`/${process.env.DATABASE_SECTION}/${this.props.listid}`).off();
+        }
+    };
+
+
     changeTitle = (event) => {
         const title = event.target.value;
         this.setState(() => ({ title }));
     };
 
-    onSubmit = (event) => {
-        event.preventDefault();
-    };
+    saveTitle = () => {
+        if (this.state.title !== '') {
+            database.ref(`/${process.env.DATABASE_SECTION}/${this.props.listid}`).update({
+                title: this.state.title
+            });
+        }
+        else {
+
+        }
+    }
 
     addItem = (event) => {
         event.preventDefault();
         const newItem = this.state.currentItem;
         if (newItem !== '' && this.state.items.indexOf(newItem) == -1) {
-            this.setState(prevState => ({
-                items: [...prevState.items, newItem],
-                addingItemError: ''
-            }));
-            this.state.currentItem = '';
+            database.ref(`/${process.env.DATABASE_SECTION}/${this.props.listid}/items`).push(newItem);
+            this.setState({
+                currentItem: ''
+            });
         }
         else if (this.state.items.indexOf(newItem) !== -1) {
             this.setState({
-                addingItemError: 'Item already exists'
+                addingItemError: 'Item already in list'
             });
         }
     };
@@ -45,27 +83,10 @@ export default class ListForm extends React.Component {
         this.setState({ currentItem });
     };
 
-    saveItem = (oldItem, newItem) => {
-        if (this.state.items.indexOf(newItem) == -1) {
-            this.setState(prevState => ({
-                items: prevState.items.map((item) => item == oldItem ? newItem : item)
-            }));
-            return true
-        };
-        return false
-    };
-
-    removeItem = (item) => {
-        this.setState(prevState => ({
-            items: prevState.items.filter((listItem) => listItem !== item)
-        }))
-    };
-
-    saveList = (event) => {
+    saveListAndPush = (event) => {
         event.preventDefault();
-        const listData = { title: this.state.title, items: this.state.items };
-        this.props.saveList(listData);
-    }
+        this.props.saveListAndPush();
+    };
 
     render() {
         return (
@@ -84,8 +105,9 @@ export default class ListForm extends React.Component {
                         value={this.state.title}
                         onChange={this.changeTitle}
                         className="text-input title"
+                        onBlur={this.saveTitle}
                     />
-                    {this.state.items.map((item) => <ListItem text={item} key={item} saveItem={this.saveItem} removeItem={this.removeItem} id={item} />)}
+                    {this.state.items.map((item) => <ListItem text={item.text} key={item.key} id={item.key} listid={this.props.listid} />)}
                 </form>
                 <form onSubmit={this.addItem}>
                     {this.state.addingItemError ? <p>{this.state.addingItemError}</p> : undefined}
@@ -98,7 +120,7 @@ export default class ListForm extends React.Component {
                     />
                 </form>
                 <div>
-                    <button className="button" onClick={this.saveList}>Save List</button>
+                    <button className="button" onClick={this.saveListAndPush}>Save List</button>
                 </div>
             </div>
         )

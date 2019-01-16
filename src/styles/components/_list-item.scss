@@ -1,6 +1,5 @@
 .list-item {
     border: 1px solid darken($off-white, 7%);
-    // border-top: none;
     color: $dark-grey;
     display: flex;
     flex-direction: row;
@@ -9,4 +8,15 @@
     box-sizing: border-box;
     justify-content: space-between;
     
+}
+
+.list-item__error {
+    border: 1px solid darken($off-white, 7%);
+    background-color: crimson;
+    display: flex;
+    flex-direction: row;
+    padding: $s-size;
+    text-decoration: none;
+    box-sizing: border-box;
+    justify-content: space-between;
 }
